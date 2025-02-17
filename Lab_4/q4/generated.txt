@@ -1,0 +1,58 @@
+public class FoodOrderingActivity extends AppCompatActivity {
+    private CheckBox[] foodItems;
+    private Button submitButton;
+    private String[] foodNames = {"Pizza", "Burger", "Salad", "Pasta", "Sushi"};
+    private double[] foodPrices = {10.99, 5.99, 7.99, 8.99, 12.99};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_food_ordering);
+
+        LinearLayout layout = findViewById(R.id.foodItemsLayout);
+        foodItems = new CheckBox[foodNames.length];
+
+        for (int i = 0; i < foodNames.length; i++) {
+            foodItems[i] = new CheckBox(this);
+            foodItems[i].setText(foodNames[i] + " ($" + foodPrices[i] + ")");
+            layout.addView(foodItems[i]);
+        }
+
+        submitButton = findViewById(R.id.submitButton);
+        submitButton.setOnClickListener(v -> submitOrder());
+    }
+
+    private void submitOrder() {
+        StringBuilder orderSummary = new StringBuilder();
+        double totalCost = 0;
+
+        for (int i = 0; i < foodItems.length; i++) {
+            if (foodItems[i].isChecked()) {
+                orderSummary.append(foodNames[i]).append(": $").append(foodPrices[i]).append("\n");
+                totalCost += foodPrices[i];
+            }
+            foodItems[i].setEnabled(false);  // Disable checkboxes after submission
+        }
+
+        orderSummary.append("\nTotal Cost: $").append(String.format("%.2f", totalCost));
+
+        Intent intent = new Intent(this, OrderSummaryActivity.class);
+        intent.putExtra("ORDER_SUMMARY", orderSummary.toString());
+        startActivity(intent);
+
+        submitButton.setEnabled(false);  // Disable submit button after submission
+    }
+}
+
+// OrderSummaryActivity.java
+public class OrderSummaryActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_order_summary);
+
+        TextView summaryTextView = findViewById(R.id.orderSummaryTextView);
+        String orderSummary = getIntent().getStringExtra("ORDER_SUMMARY");
+        summaryTextView.setText(orderSummary);
+    }
+}

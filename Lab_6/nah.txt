@@ -1,0 +1,409 @@
+Here's the complete solution for the XYZ Fitness Center app with both XML and Java code:
+
+1. Menu Resource (res/menu/menu_main.xml)
+xml
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <!-- Text-based overflow menu items -->
+    <item
+        android:id="@+id/menu_workout"
+        android:title="Workout Plans"
+        app:showAsAction="never"/>
+        
+    <item
+        android:id="@+id/menu_trainers"
+        android:title="Trainers"
+        app:showAsAction="never"/>
+        
+    <item
+        android:id="@+id/menu_membership"
+        android:title="Membership"
+        app:showAsAction="never"/>
+    
+    <!-- Icon-based app bar items -->
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+        app:showAsAction="ifRoom"/>
+        
+    <item
+        android:id="@+id/menu_contact"
+        android:icon="@drawable/ic_contact"
+        android:title="Contact Us"
+        app:showAsAction="ifRoom"/>
+        
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_about"
+        android:title="About Us"
+        app:showAsAction="ifRoom"/>
+</menu>
+2. Main Layout (res/layout/activity_main.xml)
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/purple_500"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
+3. MainActivity.java
+java
+public class MainActivity extends AppCompatActivity {
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        
+        // Load default fragment
+        if(savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Fragment fragment = null;
+        
+        switch(item.getItemId()) {
+            case R.id.menu_home:
+                fragment = new HomeFragment();
+                break;
+            case R.id.menu_workout:
+                fragment = new WorkoutFragment();
+                break;
+            case R.id.menu_trainers:
+                fragment = new TrainersFragment();
+                break;
+            case R.id.menu_membership:
+                fragment = new MembershipFragment();
+                break;
+            case R.id.menu_contact:
+                fragment = new ContactFragment();
+                break;
+            case R.id.menu_about:
+                fragment = new AboutFragment();
+                break;
+        }
+        
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}
+4. Fragment Layouts and Classes
+Home Fragment (res/layout/fragment_home.xml)
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to XYZ Fitness Center!"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+</LinearLayout>
+HomeFragment.java
+
+java
+public class HomeFragment extends Fragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+}
+Workout Fragment (res/layout/fragment_workout.xml)
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/workout_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
+WorkoutFragment.java
+
+java
+public class WorkoutFragment extends Fragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_workout, container, false);
+        
+        ListView listView = view.findViewById(R.id.workout_list);
+        String[] programs = {"Weight Loss Program", "Cardio Blast", "Strength Training", "Yoga & Flexibility"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), 
+            android.R.layout.simple_list_item_1, programs);
+        listView.setAdapter(adapter);
+        
+        return view;
+    }
+}
+Trainers Fragment (res/layout/fragment_trainers.xml)
+xml
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/trainers_recycler"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"/>
+Trainer Adapter Layout (res/layout/item_trainer.xml)
+
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/trainer_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_trainer"
+        android:contentDescription="Trainer photo"/>
+        
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp">
+            
+        <TextView
+            android:id="@+id/trainer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+            
+        <TextView
+            android:id="@+id/trainer_specialization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"/>
+    </LinearLayout>
+</LinearLayout>
+TrainersFragment.java
+
+java
+public class TrainersFragment extends Fragment {
+    
+    public TrainersFragment() {}
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_trainers, container, false);
+        
+        RecyclerView recyclerView = view.findViewById(R.id.trainers_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        List<Trainer> trainers = new ArrayList<>();
+        trainers.add(new Trainer("John Doe", "Weight Training", R.drawable.trainer1));
+        trainers.add(new Trainer("Jane Smith", "Yoga Expert", R.drawable.trainer2));
+        trainers.add(new Trainer("Mike Johnson", "Cardio Specialist", R.drawable.trainer3));
+        
+        TrainerAdapter adapter = new TrainerAdapter(trainers);
+        recyclerView.setAdapter(adapter);
+        
+        return view;
+    }
+    
+    class TrainerAdapter extends RecyclerView.Adapter<TrainerAdapter.ViewHolder> {
+        private List<Trainer> trainers;
+        
+        TrainerAdapter(List<Trainer> trainers) {
+            this.trainers = trainers;
+        }
+        
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_trainer, parent, false);
+            return new ViewHolder(view);
+        }
+        
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            Trainer trainer = trainers.get(position);
+            holder.name.setText(trainer.getName());
+            holder.specialization.setText(trainer.getSpecialization());
+            holder.image.setImageResource(trainer.getImageRes());
+        }
+        
+        @Override
+        public int getItemCount() {
+            return trainers.size();
+        }
+        
+        class ViewHolder extends RecyclerView.ViewHolder {
+            ImageView image;
+            TextView name, specialization;
+            
+            ViewHolder(View itemView) {
+                super(itemView);
+                image = itemView.findViewById(R.id.trainer_image);
+                name = itemView.findViewById(R.id.trainer_name);
+                specialization = itemView.findViewById(R.id.trainer_specialization);
+            }
+        }
+    }
+    
+    class Trainer {
+        private String name;
+        private String specialization;
+        private int imageRes;
+        
+        Trainer(String name, String specialization, int imageRes) {
+            this.name = name;
+            this.specialization = specialization;
+            this.imageRes = imageRes;
+        }
+        
+        // Getters
+        public String getName() { return name; }
+        public String getSpecialization() { return specialization; }
+        public int getImageRes() { return imageRes; }
+    }
+}
+Membership Fragment (res/layout/fragment_membership.xml)
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/membership_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
+MembershipFragment.java
+
+java
+public class MembershipFragment extends Fragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_membership, container, false);
+        
+        ListView listView = view.findViewById(R.id.membership_list);
+        String[] packages = {
+            "Basic Package: $30/month",
+            "Standard Package: $50/month",
+            "Premium Package: $80/month"
+        };
+        
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_list_item_1, packages);
+        listView.setAdapter(adapter);
+        
+        return view;
+    }
+}
+Contact Fragment (res/layout/fragment_contact.xml)
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact Us:\nEmail: contact@xyzfitness.com\nPhone: +1 234 567 890"
+        android:textSize="18sp"/>
+</LinearLayout>
+ContactFragment.java
+
+java
+public class ContactFragment extends Fragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_contact, container, false);
+    }
+}
+About Fragment (res/layout/fragment_about.xml)
+xml
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About XYZ Fitness:\nWe are a premier fitness center dedicated to helping you achieve your health goals."
+        android:textSize="18sp"/>
+</LinearLayout>
+AboutFragment.java
+
+java
+public class AboutFragment extends Fragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_about, container, false);
+    }
+}
+This implementation provides:
+
+A home screen with options menu
+
+Text-based menu items (Workout Plans, Trainers, Membership) in overflow menu
+
+Icon-based menu items (Home, Contact, About) in app bar
+
+Fragment-based navigation between different sections
+
+RecyclerView for trainers with images and details
+
+ListView for workout programs and membership packages
+
+Simple text displays for contact and about information
+
+Make sure to add the required drawable resources (menu icons and trainer images) in the res/drawable directory.

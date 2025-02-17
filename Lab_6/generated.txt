@@ -1,0 +1,84 @@
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_workout_plans:
+                showWorkoutPlans();
+                return true;
+            case R.id.menu_trainers:
+                showTrainers();
+                return true;
+            case R.id.menu_membership:
+                showMembership();
+                return true;
+            case R.id.menu_contact_us:
+                showContactUs();
+                return true;
+            case R.id.menu_about_us:
+                showAboutUs();
+                return true;
+            case R.id.menu_home:
+                showHomepage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showWorkoutPlans() {
+        String[] plans = {"Weight Loss", "Cardio", "Strength Training", "Yoga"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Workout Plans")
+               .setItems(plans, (dialog, which) -> {
+                   // Handle plan selection
+               });
+        builder.create().show();
+    }
+
+    private void showTrainers() {
+        // Create a custom layout for trainers with photos and specializations
+        // Use a RecyclerView or ListView to display the trainers
+    }
+
+    private void showMembership() {
+        String[] packages = {
+            "Basic: $30/month",
+            "Standard: $50/month",
+            "Premium: $80/month"
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Membership Packages")
+               .setItems(packages, (dialog, which) -> {
+                   // Handle package selection
+               });
+        builder.create().show();
+    }
+
+    private void showContactUs() {
+        // Display contact information
+    }
+
+    private void showAboutUs() {
+        // Display information about XYZ Fitness Center
+    }
+
+    private void showHomepage() {
+        // Return to the main content of the app
+    }
+}

@@ -1,0 +1,98 @@
+1. Creating the Options Menu
+To create an Options Menu, we need to:
+
+Define a menu resource file in XML
+
+Inflate the menu in the activity
+
+Handle menu item selections
+
+First, create a menu resource file (e.g., menu_main.xml) in the res/menu/ directory:
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_workout_plans"
+        android:title="Workout Plans"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_trainers"
+        android:title="Trainers"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_membership"
+        android:title="Membership"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_contact_us"
+        android:icon="@drawable/ic_contact_us"
+        android:title="Contact Us"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_about_us"
+        android:icon="@drawable/ic_about_us"
+        android:title="About Us"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/ic_home"
+        android:title="Homepage"
+        app:showAsAction="ifRoom"/>
+</menu>
+Next, inflate the menu in the activity:
+
+@Override
+public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_main, menu);
+    return true;
+}
+
+Finally, handle menu item selections:
+
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+        case R.id.menu_workout_plans:
+            showWorkoutPlans();
+            return true;
+        case R.id.menu_trainers:
+            showTrainers();
+            return true;
+        case R.id.menu_membership:
+            showMembership();
+            return true;
+        case R.id.menu_contact_us:
+            showContactUs();
+            return true;
+        case R.id.menu_about_us:
+            showAboutUs();
+            return true;
+        case R.id.menu_home:
+            showHomepage();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+    }
+}
+
+2. Implementing the App Bar
+The App Bar (also known as Action Bar) is automatically included in activities that use the AppCompat theme. To customize it:
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+}
+
+Make sure to include the Toolbar in your layout file:
+
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    app:popupTheme="@style/AppTheme.PopupOverlay"/>
